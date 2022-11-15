@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "watcha-clone-coding"
+version = "0.1.0"
+description = "for portfolio"
+authors = ["ryuji <ryujinho63@gmail.com>"]
+readme = "README.md"
+packages = [{include = "watcha_clone_coding"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.1.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
