@@ -35,6 +35,10 @@ CUSTOM_APPS = [
     "videos.apps.VideosConfig",
     "users.apps.UsersConfig",
     "coupons.apps.CouponsConfig",
+    "series.apps.SeriesConfig",
+    "lists.apps.ListsConfig",
+    "reviews.apps.ReviewsConfig",
+    "wishlists.apps.WishlistsConfig",
 ]
 
 SYSTEM_APPS = [

@@ -18,5 +18,3 @@ class Coupon(CommonModel):
     HDR = models.BooleanField(default=False)
     quality = models.BooleanField(default=False)
     mobile = models.BooleanField(default=False)
-
-    """serializer에 쓰일것"""

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Video
+from .models import Video, Genre, Actor, Director
 
 # Register your models here.
 @admin.register(Video)
@@ -9,10 +9,20 @@ class VideoAdmin(admin.ModelAdmin):
         "genre",
         "runtime",
         "possible_age",
-        "director",
-        "actor",
         "episode",
-        "play_count",
-        "video_url",
-        "thumbnail_url",
     )
+
+
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ("genre_name",)
+
+
+@admin.register(Actor)
+class ActorAdmin(admin.ModelAdmin):
+    list_display = ("actor_name",)
+
+
+@admin.register(Director)
+class DirectorAdmin(admin.ModelAdmin):
+    list_display = ("director_name",)

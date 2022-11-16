@@ -27,7 +27,7 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "is_active",
                     "is_staff",
-                    # "is_spueruser",
+                    "is_superuser",
                     "groups",
                     "user_permissions",
                 ),
