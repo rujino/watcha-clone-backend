@@ -15,3 +15,6 @@ class Review(CommonModel):
     )
     text = models.TextField()
     rating = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.text

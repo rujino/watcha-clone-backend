@@ -12,3 +12,6 @@ class List(CommonModel):
         blank=True,
         default="",
     )
+
+    def __str__(self):
+        return self.list_name

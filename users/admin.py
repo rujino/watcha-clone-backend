@@ -16,7 +16,6 @@ class CustomUserAdmin(UserAdmin):
                     "name",
                     "email",
                     "is_adult",
-                    "coupon",
                 ),
                 "classes": ("wide",),
             },
@@ -46,6 +45,5 @@ class CustomUserAdmin(UserAdmin):
         "username",
         "email",
         "name",
-        "coupon",
-        "is_adult",
+        "is_adult"
     )

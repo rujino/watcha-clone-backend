@@ -2,19 +2,13 @@ from django.db import models
 from common.models import CommonModel
 
 
+
 # Create your models here.
 class Coupon(CommonModel):
-    class CouponKindChoices(models.TextChoices):
-        PREMIUM = "premium", "Premium"
-        BASIC = "basic", "Basic"
-        FREE = "free", "Free"
-        NONE = "none", "None"
-
-    kind = models.CharField(
-        max_length=15,
-        choices=CouponKindChoices.choices,
+    username = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
     )
-    price = models.PositiveIntegerField()
-    HDR = models.BooleanField(default=False)
-    quality = models.BooleanField(default=False)
-    mobile = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.username
