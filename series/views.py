@@ -73,11 +73,13 @@ class Series_sReviews(APIView):
     def post(self, request, pk):
         series = self.get_object(pk)
         serializer = ReviewSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             review = serializer.save(
                 user=request.user,
                 series=series,
             )
+            print(review)
             serializer = ReviewSerializer(review)
             return Response(serializer.data)
         else:

@@ -6,8 +6,7 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { adultPost, couponGet, couponPost } from "../api";
@@ -23,14 +22,13 @@ const InfoBox = styled.div`
   padding: 50px;
 `;
 
-interface ICoupon {
-  id: number;
-  username: string;
+export interface IUserVariables {
+  pk: number;
 }
 
 export default function MyPage() {
-  const { user } = useUser();
-  const { data: couponData } = useQuery<ICoupon>(["coupon"], couponGet);
+  const { isLoggedIn, userLoading, user: userData } = useUser();
+  const { isLoading, data } = useQuery(["coupon"], couponGet);
   const navigator = useNavigate();
   const adultMutation = useMutation(adultPost, {
     onError: () => {
@@ -38,20 +36,24 @@ export default function MyPage() {
     },
   });
   const couponMutation = useMutation(couponPost, {
+    onSuccess: () => {
+      console.log("good");
+    },
     onError: () => {
       console.log("coupon errors");
     },
   });
   const couponOnClick = () => {
-    couponMutation.mutate();
-    navigator("/home/me");
+    const user = userData?.pk as number;
+    couponMutation.mutate({ user });
+    navigator("/");
   };
   const adultOnClick = () => {
     const is_adult = true;
     adultMutation.mutate({ is_adult });
-    navigator("/home/me");
+    navigator("/");
   };
-  console.log(couponData);
+  console.log();
   return (
     <Container maxW="container.md">
       <InfoBox>
@@ -67,10 +69,14 @@ export default function MyPage() {
             이용권
           </GridItem>
           <GridItem bgColor="#121314" h="94px" padding="10px" colSpan={1}>
-            {couponData ? <Text>이용권 있음</Text> : <Text>이용권 없음</Text>}
+            {data?.["exists"] ? (
+              <Text>이용권 있음</Text>
+            ) : (
+              <Text>이용권 없음</Text>
+            )}
           </GridItem>
           <GridItem bgColor="#121314" h="69px" padding="10px" colSpan={1}>
-            {couponData ? null : (
+            {data?.["exists"] ? null : (
               <Button bg="hidden" onClick={couponOnClick}>
                 쿠폰 등록하기 &rarr;
               </Button>
@@ -85,10 +91,10 @@ export default function MyPage() {
             계정
           </GridItem>
           <GridItem bgColor="#121314" h="94px" padding="10px" colSpan={1}>
-            <Text>{user?.username}</Text>
+            <Text>{userData?.username}</Text>
           </GridItem>
           <GridItem bgColor="#121314" h="94px" padding="10px" colSpan={1}>
-            {user?.is_adult ? (
+            {userData?.is_adult ? (
               <Text>성인 인증 완료</Text>
             ) : (
               <Button bg="hidden" onClick={adultOnClick}>

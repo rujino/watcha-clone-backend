@@ -6,7 +6,7 @@ class Wishlist(CommonModel):
     user = models.ForeignKey(
         "users.User",
         null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
     )
     series = models.ManyToManyField(
         "series.Series",

@@ -1,6 +1,7 @@
-import { Box, Button, Text, Input } from "@chakra-ui/react";
+import { Box, Button, Text, Input, Divider } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { FaGithub } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { usernameLogIn } from "../api";
 
@@ -24,7 +25,7 @@ export default function LoginPage() {
     },
     onSuccess: () => {
       reset(); // form 초기화
-      navigator("/home");
+      navigator("/");
       queryClient.refetchQueries(["me"]);
     },
     onError: () => {
@@ -32,7 +33,7 @@ export default function LoginPage() {
     },
   });
   const goToSignUpOnClick = () => {
-    navigator("/sign-in");
+    navigator("/user/sign-in");
   };
   const navigator = useNavigate();
   const onSubmit = ({ username, password }: IForm) => {
@@ -41,7 +42,7 @@ export default function LoginPage() {
   return (
     <Box>
       <Box
-        filter="brightness(50%)"
+        filter="brightness(30%)"
         w="100vw"
         h="100vh"
         bgRepeat="no-repeat"
@@ -90,6 +91,16 @@ export default function LoginPage() {
         >
           Log in
         </Button>
+        <Divider mt="10px" mb="10px" />
+        <Text fontSize="10px" color="white">
+          다른 방법으로 로그인 하기
+        </Text>
+        <Button
+          as="a"
+          href="https://github.com/login/oauth/authorize?client_id=384d5b15fea1a357b00c&scope=read:user,user:email"
+          w="100%"
+          leftIcon={<FaGithub fontSize="30px" />}
+        ></Button>
       </Box>
     </Box>
   );

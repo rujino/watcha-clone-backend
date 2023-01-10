@@ -7,15 +7,15 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// 모든 시리즈 불러오기
+/** 모든 시리즈 불러오기 */
 export const getSeries = () =>
   axiosInstance.get("series/").then((response) => response.data);
 
-// 드라마장르 시리즈 불러오기
+/** 드라마장르 시리즈 불러오기 */
 export const getGenreDramaSeries = () =>
   axiosInstance.get("series/drama").then((response) => response.data);
 
-// 특정 시리즈 디테일 불러오기
+/** 특정 시리즈 디테일 불러오기 */
 export const getSeriesDetail = ({ queryKey }: QueryFunctionContext) => {
   const [, seriesPk] = queryKey;
   return axiosInstance
@@ -23,7 +23,7 @@ export const getSeriesDetail = ({ queryKey }: QueryFunctionContext) => {
     .then((response) => response.data);
 };
 
-// 특정 시리즈 리뷰 불러오기
+/** 특정 시리즈 리뷰 불러오기 */
 export const getSeriesReviews = ({ queryKey }: QueryFunctionContext) => {
   const [, seriesPk] = queryKey;
   return axiosInstance
@@ -31,7 +31,7 @@ export const getSeriesReviews = ({ queryKey }: QueryFunctionContext) => {
     .then((response) => response.data);
 };
 
-// 로그인한 유저의 정보
+/** 로그인한 유저의 정보 */
 export const getMe = () =>
   axiosInstance.get(`users/me`).then((response) => response.data);
 
@@ -41,7 +41,7 @@ export interface IUserCreateVariables {
   name: string;
 }
 
-// 유저 Sign Up
+/** 유저 Sign Up */
 export const createUser = (variables: IUserCreateVariables) =>
   axiosInstance
     .post(`users/`, variables, {
@@ -51,7 +51,7 @@ export const createUser = (variables: IUserCreateVariables) =>
     })
     .then((response) => response.data);
 
-// 유저 로그아웃
+/** 유저 로그아웃 */
 export const logOut = () =>
   axiosInstance
     .post("users/log-out", null, {
@@ -61,12 +61,12 @@ export const logOut = () =>
     })
     .then((response) => response.data);
 
-// 유저 로그인
 export interface IUsernameLoginVariables {
   username: string;
   password: string;
 }
 
+/** 유저 로그인 */
 export const usernameLogIn = (
   { username, password }: IUsernameLoginVariables // mutation함수는 single argument가 아닌 objects를 가져온다. ({})
 ) =>
@@ -82,12 +82,12 @@ export const usernameLogIn = (
     )
     .then((response) => response.data);
 
-// 시리즈 보고싶어요 토글
 export interface IPlusVariables {
   userPk: number;
   seriesPk: number;
 }
 
+/** 시리즈 보고싶어요 토글 */
 export const plusToggle = ({ userPk, seriesPk }: IPlusVariables) =>
   axiosInstance
     .put(
@@ -101,11 +101,11 @@ export const plusToggle = ({ userPk, seriesPk }: IPlusVariables) =>
     )
     .then((response) => response.data);
 
-// 시리즈 보고싶어요 보관함 불러오기
+/** 시리즈 보고싶어요 보관함 불러오기 */
 export const getWishlist = () =>
   axiosInstance.get(`wishlists/`).then((response) => response.data);
 
-// 보고싶어요 보관함 생성
+/** 보고싶어요 보관함 생성 */
 export const createWishlist = () =>
   axiosInstance
     .post(`wishlists/`, null, {
@@ -119,7 +119,7 @@ export interface IVideoPk {
   videoPk?: number;
 }
 
-// 재생 횟수 증가
+/** 재생 횟수 증가 */
 export const countPlayCount = ({ videoPk }: IVideoPk) =>
   axiosInstance
     .put(`videos/${videoPk}`, null, {
@@ -129,13 +129,13 @@ export const countPlayCount = ({ videoPk }: IVideoPk) =>
     })
     .then((response) => response.data);
 
-// 리뷰 post
 interface IReviewData {
   seriesPkVariable: string;
   text: string;
   rating: number;
 }
 
+/** 리뷰 쓰기 */
 export const reviewPost = ({ seriesPkVariable, text, rating }: IReviewData) =>
   axiosInstance
     .post(
@@ -153,6 +153,7 @@ interface IAdultVariable {
   is_adult: boolean;
 }
 
+/** 성인 인증 */
 export const adultPost = ({ is_adult }: IAdultVariable) =>
   axiosInstance
     .put(
@@ -166,14 +167,38 @@ export const adultPost = ({ is_adult }: IAdultVariable) =>
     )
     .then((response) => response.data);
 
+/** 쿠폰 사용 여부 */
 export const couponGet = () =>
   axiosInstance.get("users/coupon").then((response) => response.data);
 
-export const couponPost = () =>
+interface IUserVariables {
+  user: number;
+}
+
+/** 쿠폰 결제 */
+export const couponPost = ({ user }: IUserVariables) =>
   axiosInstance
-    .post(`users/coupon`, null, {
-      headers: {
-        "X-CSRFToken": Cookie.get("csrftoken") || "",
-      },
-    })
+    .post(
+      `users/coupon`,
+      { user },
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      }
+    )
     .then((response) => response.data);
+
+/** github 로그인 */
+export const githubLogIn = (code: string) =>
+  axiosInstance
+    .post(
+      `/users/github`, // users/github url에 code를 post
+      { code }, // code 넣어둠 backend에서 request.data를 통해 접근 가능
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      }
+    )
+    .then((response) => response.status);

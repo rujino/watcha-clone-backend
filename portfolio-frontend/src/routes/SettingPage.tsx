@@ -14,8 +14,6 @@ import {
 import { useForm } from "react-hook-form";
 import useUser from "../lib/useUser";
 
-interface settingsVariables {}
-
 export default function SettingPage() {
   const { register, handleSubmit } = useForm();
   const { user } = useUser();

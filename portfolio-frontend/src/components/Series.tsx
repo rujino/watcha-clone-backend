@@ -34,13 +34,13 @@ const brightVariants = {
   },
 };
 
-const Card = styled(motion.div)`
+const Card = styled(motion.div)<{ bgPhotos: string }>`
   width: 190px;
   height: 280px;
   background-color: gray;
   margin-top: 15px;
   margin-bottom: 15px;
-  background-image: url("https://an2-img.amz.wtchn.net/image/v2/dRe-8K8ftG99FomnVUANUw.jpg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKdmNIUnpJanBiSW1SZk56STVlREV3T0RCeE9EQWlYU3dpY0NJNklpOTJNaTl6ZEc5eVpTOXBiV0ZuWlM4eE5qVXpPVFkwTXpjek1qY3pNVFV6TnpZMEluMC5oeVNPcXpBSWpWMVgxUGUzLU9WdzNRWFl5ZnljMDVCQzB5dUVld0t4Mnhv");
+  background-image: url(${(props) => props.bgPhotos});
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -57,10 +57,10 @@ const Info = styled(motion.div)`
   z-index: 5000;
 `;
 
-const BrightBox = styled(motion.div)`
+const BrightBox = styled(motion.div)<{ bgPhotos: string }>`
   width: 100%;
   height: 100%;
-  background-image: url("https://an2-img.amz.wtchn.net/image/v2/dRe-8K8ftG99FomnVUANUw.jpg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKdmNIUnpJanBiSW1SZk56STVlREV3T0RCeE9EQWlYU3dpY0NJNklpOTJNaTl6ZEc5eVpTOXBiV0ZuWlM4eE5qVXpPVFkwTXpjek1qY3pNVFV6TnpZMEluMC5oeVNPcXpBSWpWMVgxUGUzLU9WdzNRWFl5ZnljMDVCQzB5dUVld0t4Mnhv");
+  background-image: url(${(props) => props.bgPhotos});
   background-color: black;
   background-position: center;
   background-repeat: no-repeat;
@@ -99,20 +99,12 @@ export default function Series({
   const queryClient = useQueryClient();
   const mutation = useMutation(plusToggle, {
     onSuccess: () => {
-      console.log("good");
       queryClient.refetchQueries(["series"]);
       queryClient.refetchQueries(["seriesDrama"]);
       queryClient.refetchQueries(["wishlist"]);
     },
-    onError: () => {
-      console.log("nono");
-    },
   });
-  const countMutation = useMutation(countPlayCount, {
-    onSuccess: () => {
-      console.log("count");
-    },
-  });
+  const countMutation = useMutation(countPlayCount);
   const interestedButtonClick = (
     event: React.SyntheticEvent<HTMLButtonElement>
   ) => {
@@ -120,21 +112,22 @@ export default function Series({
     setValue(!value);
     const seriesPk = id;
     const userPk = data?.[0].id as number;
-    console.log("userPk = ", userPk);
-    console.log("seriesPk = ", seriesPk);
     mutation.mutate({ userPk, seriesPk });
   };
   const playButtonClick = (event: React.SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const videoPk = seriesData?.video[0].pk;
-    console.log(seriesData?.video[0].sub_title);
     countMutation.mutate({ videoPk });
-    console.log("!");
   };
   return (
-    <Link to={`/home/series/${id}`}>
-      <Card variants={CardVariants} initial="normal" whileHover="hover">
-        <BrightBox variants={brightVariants}></BrightBox>
+    <Link to={`/series/${id}`}>
+      <Card
+        variants={CardVariants}
+        bgPhotos={poster_url}
+        initial="normal"
+        whileHover="hover"
+      >
+        <BrightBox variants={brightVariants} bgPhotos={poster_url}></BrightBox>
         <Info variants={InfoVariants}>
           <HStack marginBottom="10px">
             <Button

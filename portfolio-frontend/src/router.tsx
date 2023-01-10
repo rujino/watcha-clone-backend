@@ -5,22 +5,17 @@ import Home from "./routes/Home";
 import NotFound from "./routes/NotFound";
 import SeriesDetail from "./routes/SeriesDetail";
 import MyPage from "./routes/MyPage";
-import FirstPageRoot from "./components/FirstPageRoot";
 import FirstPage from "./routes/FirstPage";
 import SignUpPage from "./routes/SignUpPage";
 import WishlistPage from "./routes/WishlistPage";
 import SettingPage from "./routes/SettingPage";
+import GithubConfirm from "./routes/GithubConfirm";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <FirstPageRoot />,
+    path: "/user/",
     errorElement: <NotFound />,
     children: [
-      {
-        path: "",
-        element: <FirstPage />,
-      },
       {
         path: "log-in",
         element: <LoginPage />,
@@ -29,10 +24,19 @@ const router = createBrowserRouter([
         path: "sign-in",
         element: <SignUpPage />,
       },
+      {
+        path: "social",
+        children: [
+          {
+            path: "github",
+            element: <GithubConfirm />,
+          },
+        ],
+      },
     ],
   },
   {
-    path: "/home/",
+    path: "/",
     element: <Root />,
     errorElement: <NotFound />,
     children: [

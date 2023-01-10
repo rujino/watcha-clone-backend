@@ -15,7 +15,7 @@ import { logOut } from "../api";
 import useUser from "../lib/useUser";
 
 export default function Header() {
-  const { userLoading, isLoggedIn } = useUser();
+  const { userLoading, isLoggedIn, user } = useUser();
   const queryClinet = useQueryClient();
   const navigator = useNavigate();
   const mutation = useMutation(logOut, {
@@ -30,16 +30,16 @@ export default function Header() {
   };
   const onLogOut = () => {
     mutation.mutate();
-    navigator("/log-in/");
+    navigator("/user/log-in/");
   };
   const onClickLogin = () => {
-    navigator("/log-in/");
+    navigator("/user/log-in/");
   };
   const onClickSignin = () => {
-    navigator("/sign-in/");
+    navigator("/user/sign-in/");
   };
   const onClickSetting = () => {
-    navigator("/home/setting/");
+    navigator("/setting/");
   };
   return (
     <Stack position="fixed" left="0" top="0" w="100%" zIndex="500">
@@ -55,9 +55,10 @@ export default function Header() {
             ) : (
               <Menu>
                 <MenuButton marginRight="50px">
-                  <Avatar size="sm" />
+                  <Avatar size="sm" src={user?.avator} />
                 </MenuButton>
                 <MenuList zIndex="99">
+                  <MenuItem>{user?.username}</MenuItem>
                   <MenuItem onClick={onClickSetting}>프로필 설정</MenuItem>
                   <MenuItem onClick={onMe}>내 정보</MenuItem>
                   <MenuItem onClick={onLogOut}>Log out</MenuItem>

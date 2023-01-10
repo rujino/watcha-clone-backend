@@ -31,7 +31,7 @@ export default function SignUpPage() {
         );
       } else {
         reset(); // form 초기화
-        navigator("/log-in/");
+        navigator("/user/log-in/");
       }
 
       queryClient.refetchQueries(["me"]);
@@ -63,7 +63,7 @@ export default function SignUpPage() {
   };
   const navigator = useNavigate();
   const goToLoginOnClick = () => {
-    navigator("/log-in");
+    navigator("/user/log-in");
   };
   return (
     <Box>

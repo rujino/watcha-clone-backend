@@ -31,8 +31,8 @@ export default function TabList() {
   const [currentTab, setCurrentTab] = useState(0);
 
   const menuArr = [
-    { name: "비디오", to: "/home" },
-    { name: "보관함", to: "/home/wishlist" },
+    { name: "비디오", to: "/" },
+    { name: "보관함", to: "/wishlist" },
   ];
 
   const selectMenuHandler = (index: number) => {

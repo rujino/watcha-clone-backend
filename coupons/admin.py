@@ -5,5 +5,6 @@ from .models import Coupon
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
     list_display = (
-        "username",
+        "pk",
+        "user"     
     )

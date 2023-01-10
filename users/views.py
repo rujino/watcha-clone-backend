@@ -1,10 +1,14 @@
+import requests
+from django.utils import timezone
+from datetime import timedelta
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import IsAuthenticated
-from coupons.serializer import CouponSerializer
+from coupons.models import Coupon
 from users.models import User
 from . import serializers
 
@@ -97,14 +101,20 @@ class LogOut(APIView):
 class UserCoupon(APIView):
     def get(self, request):
         user = request.user
-        print(user)
-        serializer = serializers.CouponSerializer(user)
-        return Response(serializer.data)
+        time = timezone.now() - timedelta(hours=1)
+        print(time)
+        if Coupon.objects.filter(user=user, created_at__gt=time).exists():
+            return Response({"exists": True})
+        else:
+            return Response({"exists": False})
+
 
 
 
     def post(self, request):
-        serializer = CouponSerializer(data=request.data)
+        serializer = serializers.CouponSerializer(data=request.data)
+        print(serializer)
+        print(serializer.is_valid())
         if serializer.is_valid():
             coupon = serializer.save(
                 user = request.user
@@ -113,3 +123,60 @@ class UserCoupon(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
+class GithubLogin(APIView):
+    def post(self, request):
+        try:
+            code = request.data.get("code") # url에서 ?code={code}를 받아오네
+            access_token = requests.post(
+                f"https://github.com/login/oauth/access_token?code={code}&client_id=384d5b15fea1a357b00c&client_secret={settings.GH_SECRET}",
+                headers={"Accept": "application/json"},
+            )   # url에 "code"를 넣고 github로 부터 access token과 교환한다.
+            access_token = access_token.json().get("access_token") # access 토큰을 얻었다.
+            user_data = requests.get(
+                "https://api.github.com/user",
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                    "Accept": "application/json",
+                },
+            )
+            user_data = user_data.json()
+
+            user_emails = requests.get(
+                "https://api.github.com/user/emails",
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                    "Accept": "application/json",
+                },
+            )
+            print(user_emails.json())
+            user_emails = user_emails.json()
+
+            # user의 email이 없으면 sign up이고 email이 있으면 로그인이다.
+            try:
+                user = User.objects.get(email=user_emails[0]["email"])
+                login(request, user)
+                return Response(status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                user = User.objects.create(
+                    username=user_emails[0]["email"],
+                    email=user_emails[0]["email"],
+                    name=user_data.get("name"),
+                    avator=user_data.get("avatar_url"),
+                )
+                user.set_unusable_password()  # .has_usable_password도 있다.
+                user.save()  # 유저를 저장하고
+                login(request, user)  # 바로 로그인 시켜주기
+            return Response(status=status.HTTP_200_OK)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class CF_GetUploadURL(APIView):
+    def post(self, request):
+        url = f"https://api.cloudflare.com/client/v4/accounts/{settings.CF_ID}/images/v1"
+        one_time_url = request.post(url, headers={
+            "Authorization": f"Bearer {settings.CF_TOKEN}"
+            },
+        )
+        one_time_url = one_time_url.json()
+        return Response(one_time_url)

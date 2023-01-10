@@ -23,6 +23,7 @@ import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import {
   countPlayCount,
+  couponGet,
   getSeriesDetail,
   getSeriesReviews,
   reviewPost,
@@ -37,14 +38,9 @@ export interface IReviewVariables {
 
 export default function SeriesDetail() {
   const { seriesPk } = useParams();
-  const queryClient = useQueryClient();
-  const { user } = useUser();
   const { register, handleSubmit } = useForm();
-  const countMutation = useMutation(countPlayCount, {
-    onSuccess: () => {
-      console.log("count");
-    },
-  });
+  const queryClient = useQueryClient();
+  const { data: couponData } = useQuery(["coupon"], couponGet);
   const { data } = useQuery<ISeriesDetail>(
     ["series", seriesPk],
     getSeriesDetail
@@ -53,6 +49,11 @@ export default function SeriesDetail() {
     ["series", seriesPk, "reviews"],
     getSeriesReviews
   );
+  const countMutation = useMutation(countPlayCount, {
+    onSuccess: () => {
+      console.log("count");
+    },
+  });
   const playButtonOnClick = () => {
     const videoPk = data?.video[0].pk;
     countMutation.mutate({ videoPk });
@@ -94,7 +95,7 @@ export default function SeriesDetail() {
           </HStack>
           <Box h="56px" borderTop="1px" borderBottom="1px">
             <HStack>
-              {user?.coupon.kind_name === "Premium" ? (
+              {couponData?.["exists"] ? (
                 <Button onClick={playButtonOnClick}>감상하기</Button>
               ) : null}
               <Box w="90%"></Box>

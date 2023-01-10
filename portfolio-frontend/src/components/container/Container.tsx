@@ -5,10 +5,10 @@ import { ISeriesList } from "../../types";
 import { Box, Spinner, Text, Container } from "@chakra-ui/react";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Banner from "../Banner";
 
 import "../../css/swiper.css";
 import "../../css/navigation.css";
-import Banner from "../Banner";
 
 export default function Containers() {
   const { isLoading, data } = useQuery<ISeriesList[]>(["series"], getSeries);
@@ -36,9 +36,8 @@ export default function Containers() {
             navigation
           >
             {data?.map((series, index) => (
-              <SwiperSlide>
+              <SwiperSlide key={index}>
                 <Series
-                  key={index}
                   id={series.id}
                   title={series.title}
                   genre={series.genre.genre_name}
