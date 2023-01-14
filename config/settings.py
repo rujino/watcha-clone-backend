@@ -171,11 +171,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
 
-CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000"]
+if DEBUG:
+
+    CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000"]
+    CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
+else:
+    CORS_ALLOWED_ORIGINS = ["https://watcha-frontend.onrender.com"]
+    CSRF_TRUSTED_ORIGINS = ["https://watcha-frontend.onrender.com"]
 
 CORS_ALLOW_CREDENTIALS = True
-
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
 
 GH_SECRET = env("GH_SECRET")
 
