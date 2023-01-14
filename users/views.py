@@ -70,6 +70,7 @@ class ChangePassword(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+            
 class LogIn(APIView):
     def post(self, request):
         username = request.data.get("username")
@@ -109,8 +110,6 @@ class UserCoupon(APIView):
             return Response({"exists": False})
 
 
-
-
     def post(self, request):
         serializer = serializers.CouponSerializer(data=request.data)
         print(serializer)
@@ -123,6 +122,7 @@ class UserCoupon(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
 
 class GithubLogin(APIView):
     def post(self, request):
@@ -173,10 +173,11 @@ class GithubLogin(APIView):
 
 class CF_GetUploadURL(APIView):
     def post(self, request):
-        url = f"https://api.cloudflare.com/client/v4/accounts/{settings.CF_ID}/images/v1"
-        one_time_url = request.post(url, headers={
+        url = f"https://api.cloudflare.com/client/v4/accounts/{settings.CF_ID}/images/v2/direct_upload"
+        one_time_url = requests.post(url, headers={
             "Authorization": f"Bearer {settings.CF_TOKEN}"
             },
         )
         one_time_url = one_time_url.json()
-        return Response(one_time_url)
+        result = one_time_url.get("result")
+        return Response({"uploadURL": result.get("uploadURL")})
