@@ -172,7 +172,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 if DEBUG:
-
+    SESSION_COOKIE_DOMAIN = ".mypo.ink"
+    CSRF_COOKIE_DOMAIN = ".mypo.ink"
     CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000"]
     CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
 else:
