@@ -8,7 +8,6 @@ services:
   - type: web
     name: watcha-clone-backend
     env: python
-    plan: free
     region: singapore
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
