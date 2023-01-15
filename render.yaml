@@ -1,12 +1,12 @@
 databases:
-  - name: watchaclone
+  - name: watchaclone-db
     databaseName: watchaclone
     user: watchaclone
     region: singapore
 
 services:
   - type: web
-    name: watchaclone
+    name: watcha-clone-backend
     env: python
     region: singapore
     buildCommand: "./build.sh"
