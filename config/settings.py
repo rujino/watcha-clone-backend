@@ -52,7 +52,6 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    "rest_framework.authtoken", # 1.18 추가
     "corsheaders",
 ]
 
@@ -183,7 +182,7 @@ if DEBUG:
     CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
 else:
     CORS_ALLOWED_ORIGINS = ["https://mypo.ink"]
-    CSRF_TRUSTED_ORIGINS = ["https://mypo.ink"]
+    CSRF_TRUSTED_ORIGINS = ["https://mypo.ink/", "https://mypo.ink", "http://mypo.ink/", "http://mypo.ink", "https://www.mypo.ink/", "https://www.mypo.ink"]
 
 CORS_ALLOW_CREDENTIALS = True
 
